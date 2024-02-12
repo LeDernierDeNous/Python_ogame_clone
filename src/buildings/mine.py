@@ -1,4 +1,4 @@
-from resources.resourcetype import ResourceType
+from src.resources.resourcetype import ResourceType
 from src.buildings.building import Building
 from abc import ABC, abstractmethod
 
