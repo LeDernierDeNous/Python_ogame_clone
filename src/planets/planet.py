@@ -25,7 +25,7 @@ class Planet:
     def add_building(self, building: Building):
         # Check if a building of the same type already exists
         building_type = building.get_type()
-        if building_type in self.buildings:
+        if building_type in self.buildings.keys():
             print(f"A {building_type.capitalize()} building already exists on this planet.")
         else:
             # Add the building to the planet
