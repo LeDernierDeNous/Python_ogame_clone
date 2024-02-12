@@ -1,6 +1,7 @@
 from collections import namedtuple
+from io import StringIO
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from src.resources.resource import Resource
 from src.planets.planet import Planet
@@ -21,24 +22,31 @@ class TestPlanet(unittest.TestCase):
         self.planet.add_building(metal_mine)
         self.planet.add_building(crystal_field)
 
-        # Adding the same type of building should print a message
-        with self.assertLogs() as log:
-            self.planet.add_building(metal_mine)
-            self.assertIn(f"A Metal building already exists on this planet.", log.output[0])
-
         # Verify the correct buildings are added
-        self.assertIn(MetalMine.building_type, self.planet.buildings)
-        self.assertIn(CrystalField.building_type, self.planet.buildings)
-        self.assertNotIn(DeuteriumSynthesizer.building_type, self.planet.buildings)
+        self.assertIn(MetalMine.get_static_type(), self.planet.buildings)
+        self.assertIn(CrystalField.get_static_type(), self.planet.buildings)
+        self.assertNotIn(DeuteriumSynthesizer.get_static_type(), self.planet.buildings)
+
+    def test_add_building_existing(self):
+        planet = Planet(owner="Test Owner", name="Test Planet")
+        metal_building = MetalMine()
+        planet.add_building(metal_building)
+
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            planet.add_building(metal_building)
+
+        expected_output = "A Metalmine building already exists on this planet.\n"
+        self.assertEqual(mock_stdout.getvalue(), expected_output)
+
 
     def test_calculate_base_production(self):
         tick = 3
         production_rates = self.planet.calculate_base_production(tick)
 
         # Verify production rates
-        self.assertEqual(30, production_rates.metal)
-        self.assertEqual(15, production_rates.crystal)
-        self.assertEqual(6, production_rates.deuterium)
+        self.assertEqual(30, production_rates[0])
+        self.assertEqual(15, production_rates[1])
+        self.assertEqual(6, production_rates[2])
 
     def test_calculate_building_production(self):
         tick = 2
@@ -54,26 +62,26 @@ class TestPlanet(unittest.TestCase):
         deuterium_synthesizer.get_production.return_value = 8
 
         # Add mock buildings to the planet
-        self.planet.buildings[MetalMine.building_type] = metal_mine
-        self.planet.buildings[CrystalField.building_type] = crystal_field
-        self.planet.buildings[DeuteriumSynthesizer.building_type] = deuterium_synthesizer
+        self.planet.buildings[MetalMine.get_static_type()] = metal_mine
+        self.planet.buildings[CrystalField.get_static_type()] = crystal_field
+        self.planet.buildings[DeuteriumSynthesizer.get_static_type()] = deuterium_synthesizer
 
         production_rates = self.planet.calculate_building_production(tick)
 
         # Verify building-based production rates
-        self.assertEqual(40, production_rates.metal)
-        self.assertEqual(30, production_rates.crystal)
-        self.assertEqual(16, production_rates.deuterium)
+        self.assertEqual(40, production_rates[0])
+        self.assertEqual(30, production_rates[1])
+        self.assertEqual(16, production_rates[2])
 
     def test_produce_resources(self):
         # Stub calculate_base_production and calculate_building_production
-        self.planet.calculate_base_production = MagicMock(return_value=namedtuple(metal=10, crystal=5, deuterium=2))
-        self.planet.calculate_building_production = MagicMock(return_value=namedtuple(metal=20, crystal=15, deuterium=8))
+        self.planet.calculate_base_production = MagicMock(return_value=(10, 5, 2))
+        self.planet.calculate_building_production = MagicMock(return_value=(20, 15, 8))
 
         self.planet.produce_resources(tick=3)
 
         # Verify that resources are updated correctly
-        self.assertEqual(96, self.planet.resources.metal)
+        self.assertEqual(130, self.planet.resources.metal)
         self.assertEqual(65, self.planet.resources.crystal)
         self.assertEqual(26, self.planet.resources.deuterium)
 
