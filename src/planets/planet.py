@@ -1,4 +1,4 @@
-from buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
+from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
 
