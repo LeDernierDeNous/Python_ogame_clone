@@ -1,6 +1,5 @@
 import unittest
 from src.buildings.mine import MetalMine, CrystalField, DeuteriumSynthesizer
-from src import *
 
 
 class TestMineClasses(unittest.TestCase):
