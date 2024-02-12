@@ -1,3 +1,4 @@
+from buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
 
@@ -13,17 +14,13 @@ class Planet:
     CRYSTAL_BASE_PRODUCTION_RATE = 5
     DEUTERIUM_BASE_PRODUCTION_RATE = 2
 
-    METAL = "metal"
-    CRYSTAL = "crystal"
-    DEUTERIUM = "deuterium"
-
     starting_amount_resources = Resource(metal=100, crystal=50, deuterium=20)
 
     def __init__(self, owner: str, name: str):
         self.owner = owner
         self.name = name
         self.resources = self.starting_amount_resources
-        self.buildings = []
+        self.buildings = {}
 
     def add_building(self, building: Building):
         # Check if a building of the same type already exists
@@ -48,9 +45,13 @@ class Planet:
 
     def calculate_building_production(self, tick: int) -> ProductionRates:
         # Calculate resource production based on buildings and time
-        metal_building_rate = sum(building.metal_production for building in self.buildings)
-        crystal_building_rate = sum(building.crystal_production for building in self.buildings)
-        deuterium_building_rate = sum(building.deuterium_production for building in self.buildings)
+        for building in self.buildings:
+            if isinstance(building, MetalMine) :
+                metal_building_rate = building.get_production()
+            elif isinstance(building, CrystalField):
+                crystal_building_rate = building.get_production()
+            elif isinstance(building, DeuteriumSynthesizer):
+                deuterium_building_rate = building.get_production()
 
         return ProductionRates(
             metal=int(metal_building_rate * tick),
