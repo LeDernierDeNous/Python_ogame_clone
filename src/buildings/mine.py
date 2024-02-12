@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 class Mine(Building, ABC):
     def __init__(self, resource_type: ResourceType):
-        super().__init__(name=f"{resource_type.capitalize()} Mine")
+        super().__init__(name=f"{resource_type.value.capitalize()} Mine")
         self.resource_type = resource_type
 
     @abstractmethod
