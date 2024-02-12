@@ -22,6 +22,11 @@ class Building(ABC):
         # Get building type
         return self.building_type
     
+    @abstractmethod
+    def get_static_type():
+        # Get building type
+        return __class__.__name__.lower()
+    
     def get_name(self):
         # Get building  name
         return self.name
