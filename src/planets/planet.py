@@ -2,13 +2,6 @@ from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
 
-from typing import NamedTuple
-
-class ProductionRates(NamedTuple):
-    metal: int
-    crystal: int
-    deuterium: int
-
 class Planet:
     METAL_BASE_PRODUCTION_RATE = 10
     CRYSTAL_BASE_PRODUCTION_RATE = 5
@@ -31,35 +24,38 @@ class Planet:
             # Add the building to the planet
             self.buildings[building_type] = building
 
-    def calculate_base_production(self, tick: int) -> ProductionRates:
+    def calculate_base_production(self, tick: int) -> tuple:
         # Calculate base resource production without building time
-        metal_production = self.METAL_BASE_PRODUCTION_RATE * tick
-        crystal_production = self.CRYSTAL_BASE_PRODUCTION_RATE * tick
-        deuterium_production = self.DEUTERIUM_BASE_PRODUCTION_RATE * tick
+        metal_base_rate = int(self.METAL_BASE_PRODUCTION_RATE * tick)
+        crystal_base_rate = int(self.CRYSTAL_BASE_PRODUCTION_RATE * tick)
+        deuterium_base_rate = int(self.DEUTERIUM_BASE_PRODUCTION_RATE * tick)
 
-        return ProductionRates(
-            metal=metal_production,
-            crystal=crystal_production, 
-            deuterium=deuterium_production
-        )
+        print(metal_base_rate, crystal_base_rate, deuterium_base_rate)
+        return metal_base_rate, crystal_base_rate, deuterium_base_rate
 
-    def calculate_building_production(self, tick: int) -> ProductionRates:
+    def calculate_building_production(self, tick: int) -> tuple:
+        # Initialize variables with default values
+        metal_building_rate = 0
+        crystal_building_rate = 0
+        deuterium_building_rate = 0
+
         # Calculate resource production based on buildings and time
-        for building in self.buildings:
-            if isinstance(building, MetalMine) :
-                metal_building_rate = building.get_production()
-            elif isinstance(building, CrystalField):
-                crystal_building_rate = building.get_production()
-            elif isinstance(building, DeuteriumSynthesizer):
-                deuterium_building_rate = building.get_production()
+        for building_type in self.buildings:
+            if building_type == MetalMine.get_static_type():
+                metal_building_rate = int( self.buildings[building_type].get_production() * tick)
+            elif building_type == CrystalField.get_static_type():
+                crystal_building_rate = int( self.buildings[building_type].get_production() * tick)
+            elif building_type == DeuteriumSynthesizer.get_static_type():
+                deuterium_building_rate = int( self.buildings[building_type].get_production() * tick)
 
-        return ProductionRates(
-            metal=int(metal_building_rate * tick),
-            crystal=int(crystal_building_rate * tick),
-            deuterium=int(deuterium_building_rate * tick)
+        return (
+            metal_building_rate,
+            crystal_building_rate,
+            deuterium_building_rate
         )
     
     def produce_resources(self, tick: int = 1):
+        print(self.calculate_base_production(tick))
         # Calculate base production rates
         base_metal, base_crystal, base_deuterium = self.calculate_base_production(tick)
 
@@ -70,6 +66,13 @@ class Planet:
         self.resources.metal += base_metal + building_metal
         self.resources.crystal += base_crystal + building_crystal
         self.resources.deuterium += base_deuterium + building_deuterium
+
+        print(base_metal)
+        print(building_metal)
+        print(base_crystal)
+        print(building_crystal)
+        print(base_deuterium)
+        print(building_deuterium)
 
     def __str__(self) -> str:
         return f"{self.name} (Owner: {self.owner}) - {str(self.resources)}"
