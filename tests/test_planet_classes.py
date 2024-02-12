@@ -1,9 +1,7 @@
 from collections import namedtuple
 import unittest
 from unittest.mock import MagicMock
-from src.planets import Planet
-from buildings.mine import MetalMine, CrystalField, DeuteriumSynthesizer
-from src.resources.resource import Resource
+from src import *
 
 class TestPlanet(unittest.TestCase):
     def setUp(self):
