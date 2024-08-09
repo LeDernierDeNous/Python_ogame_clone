@@ -8,7 +8,7 @@ class Building(ABC):
     def upgrade(self) -> None:
         # Default upgrade logic for all buildings
         self.level += 1
-
+        
     @abstractmethod
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost
