@@ -10,6 +10,3 @@ class Player(Entity):
         planet = Planet(owner=self.name, name="Fist Planet")
         self.planets.append(planet)
         return planet
-    
-    def __str__(self):
-        return f"{self.name} - Planets: {len(self.planets)}"
