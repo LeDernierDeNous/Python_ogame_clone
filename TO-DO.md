@@ -7,7 +7,6 @@
 - [ ] **Attributes**
   - [✓] `name`: The player's name or identifier.
   - [✓] `planets`: A list of planets owned by the player.
-  - [ ] `resources`: Total resources available to the player.
   - [ ] `research`: Technologies or upgrades the player has researched.
   - [ ] `fleet`: Ships or units owned by the player.
 
