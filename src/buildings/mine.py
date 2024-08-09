@@ -15,6 +15,7 @@ class Mine(Building, ABC):
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()
+    
 class MetalMine(Mine):
     PRODUCTION_FACTOR = 30
 
@@ -29,7 +30,7 @@ class MetalMine(Mine):
         metal_cost = int(60 * 1.5 ** (self.level - 1))
         crystal_cost = int(15 * 1.5 ** (self.level - 1))
         return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost}
-    
+
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()

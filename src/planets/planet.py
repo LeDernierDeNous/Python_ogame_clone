@@ -1,3 +1,4 @@
+from src.resources.resourcetype import ResourceType
 from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
@@ -10,26 +11,22 @@ class Planet:
 
     starting_amount_resources = Resource(metal=100, crystal=50, deuterium=20)
 
-    # Fuck type checking on Player (because of circular import)
+    universe_speed = 5
+
     def __init__(self, owner, name: str):
         self.owner = owner
         self.name = name
         self.resources = self.starting_amount_resources
-        
+
         self.buildings = {}
         self.defenses = {}
-        self.research_prodlist = {}
-        self.unit_prodlist = {}
-        self.building_prodlist = {}
+        self.ships = {}
 
-    def add_building(self, building: Building):
-        # Check if a building of the same type already exists
-        building_type = building.get_type()
-        if building_type in self.buildings.keys():
-            print(f"A {building_type.capitalize()} building already exists on this planet.")
-        else:
-            # Add the building to the planet
-            self.buildings[building_type] = building
+        self.research_prodlist = []
+        self.unit_prodlist = []
+        self.building_prodlist = []
+
+    # Resources methods
 
     def calculate_base_production(self, tick: int) -> tuple:
         # Calculate base resource production without building time
@@ -73,6 +70,75 @@ class Planet:
         self.resources.crystal = self.resources.crystal + (base_crystal + building_crystal)
         self.resources.deuterium = self.resources.deuterium + (base_deuterium + building_deuterium)
 
+    # Building methods
+
+    def upgrade_building(self, building: Building) -> None:
+        building_type = building.get_type()
+        # Check if the player has enough resources to upgrade the building
+        upgrade_cost = self.buildings[building_type].calculate_upgrade_cost()
+        if self.resources.metal < upgrade_cost[ResourceType.METAL] or \
+            self.resources.crystal < upgrade_cost[ResourceType.CRYSTAL] or \
+            self.resources.deuterium < upgrade_cost[ResourceType.DEUTERIUM]:
+            print("Insufficient resources to upgrade the building.")
+            return
+        else:
+            # Deduct the resources from the player
+            self.resources.metal -= upgrade_cost[ResourceType.METAL]
+            self.resources.crystal -= upgrade_cost[ResourceType.CRYSTAL]
+            self.resources.deuterium -= upgrade_cost[ResourceType.DEUTERIUM]
+        if building_type not in self.buildings.keys():
+            # First build the building
+            print(f"Start building {building_type.capitalize()} on this planet.")
+            self.buildings[building_type] = building
+        else:
+            # Upgrade the building
+            print(f"Start Upgrading {building_type.capitalize()} from level {building.get_level()} to {building.get_level()+1} on this planet.")
+            self.buildings[building_type].upgrade()
+        self.add_building_to_prodlist(building, self.get_building_build_time(upgrade_cost))
+
+    def add_building_to_prodlist(self, building: Building, time) -> None:
+        building_type = building.get_type()
+        self.building_prodlist[building_type].append(time)
+
+    def get_building_build_time(self, upgrade_cost) -> int:
+        # Calculate the build time for the building (in hours)
+        # metalcost = upgrade_cost[ResourceType.METAL]
+        # crystalcost = upgrade_cost[ResourceType.CRYSTAL]
+        # time_hours = (metalcost + crystalcost)/(2500*(1 + robotics_factory.get_level()) * self.get_universe_speed() * (2** nanite_factory.get_level()))    
+        # return self.convert_hours_to_seconds(time_hours) 
+        return 1
+
+    # Units methods
+
+    def produce_units(self):
+        # Produce units based on the production list
+        for unit_type in self.unit_prodlist:
+            # Get the unit production rate
+            unit_production_rate = self.unit_prodlist[unit_type]
+
+            # Produce units
+            for _ in range(unit_production_rate):
+                unit = Unit(unit_type)
+                self.ships[unit_type] = self.ships.get(unit_type, 0) + 1
+
+    def get_units_build_time(self, upgrade_cost) -> int:
+        # Calculate the build time for the building (in hours)
+        # metalcost = upgrade_cost[ResourceType.METAL]
+        # crystalcost = upgrade_cost[ResourceType.CRYSTAL]
+        # time_hours = (metalcost + crystalcost)/(2500*(1 + shipyard_level.get_level()) * self.get_universe_speed() * (2** nanite_factory.get_level()))    
+        # return self.convert_hours_to_seconds(time_hours) 
+        return 1
+    
+    # Research methods
+
+    def get_research_build_time(self, upgrade_cost) -> int:
+        # Calculate the build time for the building (in hours)
+        # metalcost = upgrade_cost[ResourceType.METAL]
+        # crystalcost = upgrade_cost[ResourceType.CRYSTAL]
+        # time_hours = (metalcost + crystalcost)/(1000*(1 + research_level.get_level()) * self.get_universe_speed())  
+        # return self.convert_hours_to_seconds(time_hours)  
+        return 1 
+
     # Getters and setters
     def get_resources(self) -> Resource:
         return self.resources
@@ -85,6 +151,12 @@ class Planet:
     
     def get_buildings(self) -> dict:
         return self.buildings
+
+    def get_universe_speed(self) -> int:
+        return self.universe_speed
+
+    def convert_hours_to_seconds(self, hours: int) -> int:
+        return hours * 60 * 60
 
     # Printable representation
     def __str__(self) -> str:

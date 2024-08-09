@@ -13,6 +13,11 @@ class Building(ABC):
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost
         raise NotImplementedError("Subclasses must implement calculate_upgrade_cost")
+    
+    @abstractmethod
+    def get_build_time(self) -> int:
+        # Calculate upgrade cost
+        raise NotImplementedError("Subclasses must implement get_build_time")
 
     def _generate_building_type(self):
         # Generate building type from class name
@@ -34,6 +39,6 @@ class Building(ABC):
     def get_level(self):
         # Get building level
         return self.level
-
+    
     def __str__(self) -> str:
         return f"{self.name} (Level {self.level})"
