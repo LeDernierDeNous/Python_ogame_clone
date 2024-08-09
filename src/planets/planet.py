@@ -30,7 +30,6 @@ class Planet:
         crystal_base_rate = int(self.CRYSTAL_BASE_PRODUCTION_RATE * tick)
         deuterium_base_rate = int(self.DEUTERIUM_BASE_PRODUCTION_RATE * tick)
 
-        print(metal_base_rate, crystal_base_rate, deuterium_base_rate)
         return metal_base_rate, crystal_base_rate, deuterium_base_rate
 
     def calculate_building_production(self, tick: int) -> tuple:
@@ -41,6 +40,7 @@ class Planet:
 
         # Calculate resource production based on buildings and time
         for building_type in self.buildings:
+
             if building_type == MetalMine.get_static_type():
                 metal_building_rate = int( self.buildings[building_type].get_production() * tick)
             elif building_type == CrystalField.get_static_type():
@@ -55,7 +55,6 @@ class Planet:
         )
     
     def produce_resources(self, tick: int = 1):
-        print(self.calculate_base_production(tick))
         # Calculate base production rates
         base_metal, base_crystal, base_deuterium = self.calculate_base_production(tick)
 
@@ -63,16 +62,9 @@ class Planet:
         building_metal, building_crystal, building_deuterium = self.calculate_building_production(tick)
 
         # Add the produced resources to the planet
-        self.resources.metal += base_metal + building_metal
-        self.resources.crystal += base_crystal + building_crystal
-        self.resources.deuterium += base_deuterium + building_deuterium
-
-        print(base_metal)
-        print(building_metal)
-        print(base_crystal)
-        print(building_crystal)
-        print(base_deuterium)
-        print(building_deuterium)
+        self.resources.metal = self.resources.metal + (base_metal + building_metal)
+        self.resources.crystal = self.resources.crystal + (base_crystal + building_crystal)
+        self.resources.deuterium = self.resources.deuterium + (base_deuterium + building_deuterium)
 
     def __str__(self) -> str:
         return f"{self.name} (Owner: {self.owner}) - {str(self.resources)}"

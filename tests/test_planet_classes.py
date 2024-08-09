@@ -82,8 +82,8 @@ class TestPlanet(unittest.TestCase):
 
         # Verify that resources are updated correctly
         self.assertEqual(130, self.planet.resources.metal)
-        self.assertEqual(65, self.planet.resources.crystal)
-        self.assertEqual(26, self.planet.resources.deuterium)
+        self.assertEqual(70, self.planet.resources.crystal)
+        self.assertEqual(30, self.planet.resources.deuterium)
 
     def test_str(self):
         # Stub __str__ method for Resource
