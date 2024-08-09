@@ -66,5 +66,19 @@ class Planet:
         self.resources.crystal = self.resources.crystal + (base_crystal + building_crystal)
         self.resources.deuterium = self.resources.deuterium + (base_deuterium + building_deuterium)
 
+    # Getters and setters
+    def get_resources(self) -> Resource:
+        return self.resources
+    
+    def get_owner(self) -> str:
+        return self.owner
+    
+    def get_name(self) -> str:
+        return self.name
+    
+    def get_buildings(self) -> dict:
+        return self.buildings
+
+    # Printable representation
     def __str__(self) -> str:
         return f"{self.name} (Owner: {self.owner}) - {str(self.resources)}"
