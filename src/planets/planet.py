@@ -1,6 +1,7 @@
 from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
+from src.units.unit import Unit
 
 class Planet:
     METAL_BASE_PRODUCTION_RATE = 10
@@ -14,7 +15,12 @@ class Planet:
         self.owner = owner
         self.name = name
         self.resources = self.starting_amount_resources
+        
         self.buildings = {}
+        self.defenses = {}
+        self.research_prodlist = {}
+        self.unit_prodlist = {}
+        self.building_prodlist = {}
 
     def add_building(self, building: Building):
         # Check if a building of the same type already exists

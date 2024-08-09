@@ -11,8 +11,7 @@
   - [ ] `fleet`: Ships or units owned by the player.
 
 - [ ] **Methods**
-  - [ ] `add_planet(planet)`: Add a planet to the player’s list.
-  - [ ] `produce_resources()`: Collect resources from all owned planets.
+  - [✓] `add_planet(planet)`: Add a planet to the player’s list.
   - [ ] `research_technology(tech)`: Start or complete research on a technology.
   - [ ] `build_fleet(ship_type, quantity)`: Construct ships and add them to the fleet.
   - [ ] `attack(target)`: Engage in combat with another player or NPC.
