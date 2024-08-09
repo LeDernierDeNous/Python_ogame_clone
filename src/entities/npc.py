@@ -1,6 +1,4 @@
 from src.entities.entity import Entity
-
-
 class NPC(Entity):
     def __init__(self, name):
         super().__init__(name)
