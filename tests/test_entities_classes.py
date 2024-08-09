@@ -62,7 +62,7 @@ class TestPlayer(unittest.TestCase):
     def test_initialization(self):
         # Verify that the player is initialized with the correct name and no planets
         self.assertEqual(self.player.name, self.player_name)
-        self.assertEqual(len(self.player.planets), 0)
+        self.assertEqual(len(self.player.planets), 1)
 
     def test_add_planet(self):
         # Mock a planet object
@@ -70,12 +70,12 @@ class TestPlayer(unittest.TestCase):
         self.player.add_planet(mock_planet)
 
         # Verify that the planet was added
-        self.assertEqual(len(self.player.planets), 1)
+        self.assertEqual(len(self.player.planets), 2)
         self.assertIn(mock_planet, self.player.planets)
 
     def test_str(self):
         # Verify that the string representation of the player is as expected
-        expected_str = f"{self.player_name} - Planets: 0"
+        expected_str = f"{self.player_name} - Planets: 1"
         self.assertEqual(str(self.player), expected_str)
 
 

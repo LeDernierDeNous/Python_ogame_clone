@@ -1,7 +1,6 @@
 from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
-from src.entities.player import Player
 
 class Planet:
     METAL_BASE_PRODUCTION_RATE = 10
@@ -10,7 +9,8 @@ class Planet:
 
     starting_amount_resources = Resource(metal=100, crystal=50, deuterium=20)
 
-    def __init__(self, owner: Player, name: str):
+    # Fuck type checking on Player (because of circular import)
+    def __init__(self, owner, name: str):
         self.owner = owner
         self.name = name
         self.resources = self.starting_amount_resources

@@ -1,4 +1,4 @@
-from planets.planet import Planet
+from src.planets.planet import Planet
 from src.entities.entity import Entity
 class Player(Entity):
     def __init__(self, name):
