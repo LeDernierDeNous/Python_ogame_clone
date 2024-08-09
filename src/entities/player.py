@@ -6,7 +6,9 @@ class Player(Entity):
         self.planets = []
         self.generate_player_first_planet()
         
-    def generate_player_first_planet(self):
+    def generate_player_first_planet(self) -> None:
         planet = Planet(owner=self.name, name="Fist Planet")
+        self.add_planet(planet)
+
+    def add_planet(self, planet: Planet) -> None:
         self.planets.append(planet)
-        return planet
