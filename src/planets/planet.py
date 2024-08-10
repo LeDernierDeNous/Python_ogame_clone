@@ -1,3 +1,4 @@
+import time  # Ensure the time module is imported
 from src.resources.resourcetype import ResourceType
 from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
 from src.resources.resource import Resource
@@ -75,7 +76,7 @@ class Planet:
     def upgrade_building(self, building: Building) -> None:
         building_type = building.get_type()
         # Check if the player has enough resources to upgrade the building
-        upgrade_cost = self.buildings[building_type].calculate_upgrade_cost()
+        upgrade_cost = building.calculate_upgrade_cost()
         if self.resources.metal < upgrade_cost[ResourceType.METAL] or \
             self.resources.crystal < upgrade_cost[ResourceType.CRYSTAL] or \
             self.resources.deuterium < upgrade_cost[ResourceType.DEUTERIUM]:
@@ -92,13 +93,22 @@ class Planet:
             self.buildings[building_type] = building
         else:
             # Upgrade the building
-            print(f"Start Upgrading {building_type.capitalize()} from level {building.get_level()} to {building.get_level()+1} on this planet.")
+            print(f"Start Upgrading {building_type.capitalize()} from level {self.buildings[building_type].get_level()} to {self.buildings[building_type].get_level()+1} on this planet.")
             self.buildings[building_type].upgrade()
         self.add_building_to_prodlist(building, self.get_building_build_time(upgrade_cost))
 
-    def add_building_to_prodlist(self, building: Building, time) -> None:
+    def add_building_to_prodlist(self, building: Building, duration) -> None:
+        """Add a building to the production list with an end time.
+
+        Args:
+            building (Building): The building to add.
+            duration (int): The duration in seconds until the building production is complete.
+        """
+        now = time.time()  # Current time in seconds since the epoch
+        end_time = now + duration
         building_type = building.get_type()
-        self.building_prodlist[building_type].append(time)
+
+        self.building_prodlist.append([building_type, end_time])
 
     def get_building_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
@@ -114,7 +124,7 @@ class Planet:
         # Produce units based on the production list
         # Check if the player has enough resources to produce the units
         unit_type = unit.get_type()
-        production_cost = unit.calculate_production_cost(quantity)
+        production_cost = unit.calculate_total_production_cost(quantity)
         if self.resources.metal < production_cost[ResourceType.METAL] or \
             self.resources.crystal < production_cost[ResourceType.CRYSTAL] or \
             self.resources.deuterium < production_cost[ResourceType.DEUTERIUM]:
@@ -130,9 +140,23 @@ class Planet:
         self.ships[unit_type] = quantity
         self.add_unit_to_prodlist(unit, self.get_units_build_time(production_cost))
 
-    def add_unit_to_prodlist(self, unit: Unit, quantity: int, time_before_update) -> None:
+    def add_unit_to_prodlist(self, unit: Unit, quantity: int, duration) -> None:
+        """
+        Add a unit to the production list.
+
+        Args:
+            unit (Unit): The unit to be added.
+            quantity (int): The quantity of the unit to be added.
+            duration: The duration of the production.
+
+        Returns:
+            None
+        """
+        now = time.time()
+        end_time = now + duration
         unit_type = unit.get_type()
-        self.unit_prodlist[unit_type].append([quantity, time_before_update])
+
+        self.unit_prodlist.append([unit_type, quantity, end_time])
 
     def get_units_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
@@ -151,6 +175,33 @@ class Planet:
         # time_hours = (metalcost + crystalcost)/(1000*(1 + research_level.get_level()) * self.get_universe_speed())  
         # return self.convert_hours_to_seconds(time_hours)  
         return 1 
+
+    # Prodlists methods
+
+    def update_prodlists(self):
+        """
+        Updates the production lists for buildings and units, and provides feedback when production finishes.
+        """
+        now = time.time()
+
+        # Check which building productions are completed
+        completed_buildings = [prod for prod in self.building_prodlist if prod[1] <= now]
+        for building_type, _ in completed_buildings:
+            building = self.buildings[building_type]
+            print(f"Building production of '{building_type}' level {building.get_level()} completed on planet '{self.name}'.")
+
+
+        # Update building production list to remove completed items
+        self.building_prodlist = [prod for prod in self.building_prodlist if prod[1] > now]
+
+        # Check which unit productions are completed
+        completed_units = [prod for prod in self.unit_prodlist if prod[2] <= now]
+        for unit_type, quantity, _ in completed_units:
+            print(f"Production of {quantity} '{unit_type}' units completed on planet '{self.name}'.")
+
+        # Update unit production list to remove completed items
+        self.unit_prodlist = [prod for prod in self.unit_prodlist if prod[2] > now]
+
 
     # Getters and setters
     def get_resources(self) -> Resource:

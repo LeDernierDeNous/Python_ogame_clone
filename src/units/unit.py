@@ -35,7 +35,7 @@ class Unit(ABC):
     # Getters
 
     @abstractmethod
-    def calculate_production_cost(self) -> dict:
+    def calculate_total_production_cost(self, quantity: int) -> dict:
         # Calculate upgrade cost
         raise NotImplementedError("Subclasses must implement calculate_production_cost")
 

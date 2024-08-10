@@ -3,7 +3,7 @@ from src.entities.entity import Entity
 class Player(Entity):
     def __init__(self, name):
         super().__init__(name)
-        self.planets[Planet] = []
+        self.planets = []
         self.generate_player_first_planet()
         self.active_fleet = []
         self.max_fleet = 2
