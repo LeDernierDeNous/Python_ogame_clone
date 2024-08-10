@@ -34,6 +34,11 @@ class Unit(ABC):
 
     # Getters
 
+    @abstractmethod
+    def calculate_production_cost(self) -> dict:
+        # Calculate upgrade cost
+        raise NotImplementedError("Subclasses must implement calculate_production_cost")
+
     def get_structural_integrity(self) -> int:
         # To-do: Update with the structural integrity is equal to metal cost and crystal cost
         return self.structural_integrity
