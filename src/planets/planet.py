@@ -125,10 +125,14 @@ class Planet:
             self.resources.metal -= production_cost[ResourceType.METAL]
             self.resources.crystal -= production_cost[ResourceType.CRYSTAL]
             self.resources.deuterium -= production_cost[ResourceType.DEUTERIUM]
-            
+
         print(f"Start producing {quantity} of {unit_type.capitalize()} on this planet.")
         self.ships[unit_type] = quantity
         self.add_unit_to_prodlist(unit, self.get_units_build_time(production_cost))
+
+    def add_unit_to_prodlist(self, unit: Unit, quantity: int, time_before_update) -> None:
+        unit_type = unit.get_type()
+        self.unit_prodlist[unit_type].append([quantity, time_before_update])
 
     def get_units_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
