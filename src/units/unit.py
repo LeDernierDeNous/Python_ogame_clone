@@ -13,6 +13,10 @@ class Unit(ABC):
         self.buildings_requirements = {}
         self.technologies_requirements = {}
 
+        self.unit_type = self._generate_unit_type()
+
+    # combat system
+
     def recieve_damage(self, damage: int) -> None:
         if damage < 0:
             raise ValueError("Damage must be a positive integer.")
@@ -48,3 +52,11 @@ class Unit(ABC):
     
     def get_cost(self) -> Resource:
         return self.cost
+    
+    def _generate_unit_type(self):
+        # Generate building type from class name
+        return self.__class__.__name__.lower()
+
+    def get_type(self):
+        # Get building type
+        return self.unit_type

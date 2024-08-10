@@ -110,16 +110,25 @@ class Planet:
 
     # Units methods
 
-    def produce_units(self):
+    def produce_units(self, unit: Unit, quantity: int) -> None:
         # Produce units based on the production list
-        for unit_type in self.unit_prodlist:
-            # Get the unit production rate
-            unit_production_rate = self.unit_prodlist[unit_type]
-
-            # Produce units
-            for _ in range(unit_production_rate):
-                unit = Unit(unit_type)
-                self.ships[unit_type] = self.ships.get(unit_type, 0) + 1
+        # Check if the player has enough resources to produce the units
+        unit_type = unit.get_type()
+        production_cost = unit.calculate_production_cost(quantity)
+        if self.resources.metal < production_cost[ResourceType.METAL] or \
+            self.resources.crystal < production_cost[ResourceType.CRYSTAL] or \
+            self.resources.deuterium < production_cost[ResourceType.DEUTERIUM]:
+            print("Insufficient resources to produce the units.")
+            return
+        else:
+            # Deduct the resources from the player
+            self.resources.metal -= production_cost[ResourceType.METAL]
+            self.resources.crystal -= production_cost[ResourceType.CRYSTAL]
+            self.resources.deuterium -= production_cost[ResourceType.DEUTERIUM]
+            
+        print(f"Start producing {quantity} of {unit_type.capitalize()} on this planet.")
+        self.ships[unit_type] = quantity
+        self.add_unit_to_prodlist(unit, self.get_units_build_time(production_cost))
 
     def get_units_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
