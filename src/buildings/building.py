@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 class Building(ABC):
-    def __init__(self, name: str, level: int = 0):
+    def __init__(self, name: str, level: int = 1):
         self.name = name
         self.level = level
         self.building_type = self._generate_building_type()
@@ -8,11 +8,16 @@ class Building(ABC):
     def upgrade(self) -> None:
         # Default upgrade logic for all buildings
         self.level += 1
-        
+
     @abstractmethod
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost
         raise NotImplementedError("Subclasses must implement calculate_upgrade_cost")
+    
+    @abstractmethod
+    def get_build_time(self) -> int:
+        # Calculate upgrade cost
+        raise NotImplementedError("Subclasses must implement get_build_time")
 
     def _generate_building_type(self):
         # Generate building type from class name
@@ -30,6 +35,10 @@ class Building(ABC):
     def get_name(self):
         # Get building  name
         return self.name
-
+    
+    def get_level(self):
+        # Get building level
+        return self.level
+    
     def __str__(self) -> str:
         return f"{self.name} (Level {self.level})"

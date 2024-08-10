@@ -15,6 +15,7 @@ class Mine(Building, ABC):
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()
+    
 class MetalMine(Mine):
     PRODUCTION_FACTOR = 30
 
@@ -28,11 +29,15 @@ class MetalMine(Mine):
         # Calculate upgrade cost based on the formula
         metal_cost = int(60 * 1.5 ** (self.level - 1))
         crystal_cost = int(15 * 1.5 ** (self.level - 1))
-        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost}
-    
+        deuterium_cost = 0
+        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost, ResourceType.DEUTERIUM: deuterium_cost}
+
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()
+    
+    def get_build_time(self) -> int:
+        return super().get_build_time()
 
 class CrystalField(Mine):
     PRODUCTION_FACTOR = 20
@@ -47,11 +52,15 @@ class CrystalField(Mine):
         # Calculate upgrade cost based on the formula
         metal_cost = int(48 * 1.6 ** (self.level - 1))
         crystal_cost = int(24 * 1.6 ** (self.level - 1))
-        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost}
+        deuterium_cost = 0
+        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost, ResourceType.DEUTERIUM: deuterium_cost}
 
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()
+    
+    def get_build_time(self) -> int:
+        return super().get_build_time()
 class DeuteriumSynthesizer(Mine):
     PRODUCTION_FACTOR = 10
 
@@ -65,8 +74,12 @@ class DeuteriumSynthesizer(Mine):
         # Calculate upgrade cost based on the formula
         metal_cost = int(225 * 1.5 ** (self.level - 1))
         crystal_cost = int(75 * 1.5 ** (self.level - 1))
-        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost}
+        deuterium_cost = 0
+        return {ResourceType.METAL: metal_cost, ResourceType.CRYSTAL: crystal_cost, ResourceType.DEUTERIUM: deuterium_cost}
 
     def get_static_type():
         # Get building type
         return __class__.__name__.lower()
+    
+    def get_build_time(self) -> int:
+        return super().get_build_time()
