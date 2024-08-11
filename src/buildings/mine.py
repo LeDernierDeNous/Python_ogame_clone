@@ -2,25 +2,12 @@ from src.resources.resourcetype import ResourceType
 from src.buildings.building import Building
 from abc import ABC, abstractmethod
 
-class Mine(Building, ABC):
-    def __init__(self, resource_type: ResourceType):
-        super().__init__(name=f"{resource_type.value.capitalize()} Mine")
-        self.resource_type = resource_type
-
-    @abstractmethod
-    def get_production(self) -> int:
-        pass
-
-    @abstractmethod
-    def get_static_type():
-        # Get building type
-        return __class__.__name__.lower()
-    
-class MetalMine(Mine):
+class MetalMine(Building, ABC):
     PRODUCTION_FACTOR = 30
 
     def __init__(self):
-        super().__init__(resource_type=ResourceType.METAL)
+        super().__init__(name=f"Metal Mine")
+        self.resource_type = ResourceType.METAL
 
     def get_production(self) -> int:
         return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
@@ -39,11 +26,12 @@ class MetalMine(Mine):
     def get_build_time(self) -> int:
         return super().get_build_time()
 
-class CrystalField(Mine):
+class CrystalField(Building, ABC):
     PRODUCTION_FACTOR = 20
 
     def __init__(self):
-        super().__init__(resource_type=ResourceType.CRYSTAL)
+        super().__init__(name=f"Crystal Field")
+        self.resource_type = ResourceType.CRYSTAL
 
     def get_production(self) -> int:
         return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
@@ -61,11 +49,13 @@ class CrystalField(Mine):
     
     def get_build_time(self) -> int:
         return super().get_build_time()
-class DeuteriumSynthesizer(Mine):
+
+class DeuteriumSynthesizer(Building, ABC):
     PRODUCTION_FACTOR = 10
 
     def __init__(self):
-        super().__init__(resource_type=ResourceType.DEUTERIUM)
+        super().__init__(name=f"Deuterium Synthesizer")
+        self.resource_type = ResourceType.DEUTERIUM
 
     def get_production(self) -> int:
         return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))

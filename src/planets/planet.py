@@ -31,7 +31,17 @@ class Planet:
         self.unit_prodlist = []
         self.building_prodlist = []
 
+        # Initialize the planet with the all buildings
+        self.initialize_buildings()
+
         logging.debug(f'Planet {self.name} created for owner {self.owner} with initial resources {self.resources}')
+
+    # Initialization methods
+
+    def initialize_buildings(self):
+        # Initialize the planet with all buildings
+        for building_class in Building.__subclasses__():
+            self.buildings[building_class.get_static_type()] = building_class()
 
     # Resources methods
 
@@ -106,15 +116,21 @@ class Planet:
             logging.debug(f'Resources after upgrade - Metal: {self.resources.metal}, Crystal: {self.resources.crystal}, Deuterium: {self.resources.deuterium}')
         
         if building_type not in self.buildings.keys():
-            # First build the building
-            logging.info(f"Start building {building_type.capitalize()} on this planet.")
-            self.buildings[building_type] = building
+            # Error, building not found
+            logging.error(f"Building {building_type.capitalize()} not found on planet {self.name}")
         else:
             # Upgrade the building
             logging.info(f"Start Upgrading {building_type.capitalize()} from level {self.buildings[building_type].get_level()} to {self.buildings[building_type].get_level()+1} on this planet.")
+            self.add_building_to_prodlist(building, self.get_building_build_time(upgrade_cost))
+
+    def finish_building_upgrade(self, building_type: str) -> None:
+        if building_type not in self.buildings.keys():
+            # Error, building not found
+            logging.error(f"Building {building_type.capitalize()} not found on planet {self.name}")
+        else:
+            # Upgrade the building
             self.buildings[building_type].upgrade()
-        
-        self.add_building_to_prodlist(building, self.get_building_build_time(upgrade_cost))
+        logging.info(f"Building {building_type.capitalize()} upgraded to level {self.buildings[building_type].get_level()} on planet {self.name}")
 
     def add_building_to_prodlist(self, building: Building, duration) -> None:
         """Add a building to the production list with an end time.
@@ -209,6 +225,13 @@ class Planet:
 
         # Check which building productions are completed
         completed_buildings = [prod for prod in self.building_prodlist if prod[1] <= now]
+        # Log the current state of buildings on the planet
+        logging.debug(f"Current buildings on planet '{self.name}': {self.buildings}")
+        # Log the current building production list
+        logging.debug(f"Current building production list on planet '{self.name}': {self.building_prodlist}")
+        # Log the current completed buildings production list
+        logging.debug(f"Current completed building production list on planet '{self.name}': {completed_buildings}")
+
         for building_type, _ in completed_buildings:
             building = self.buildings[building_type]
             logging.info(f"Building production of '{building_type}' level {building.get_level()} completed on planet '{self.name}'.")
@@ -218,6 +241,13 @@ class Planet:
 
         # Check which unit productions are completed
         completed_units = [prod for prod in self.unit_prodlist if prod[2] <= now]
+        # Log the current state of units on the planet
+        logging.debug(f"Current units on planet '{self.name}': {self.ships}")
+        # Log the current unit production list
+        logging.debug(f"Current unit production list on planet '{self.name}': {self.unit_prodlist}")
+        # Log the current completed unit production list
+        logging.debug(f"Current completed unit production list on planet '{self.name}': {completed_units}")
+
         for unit_type, quantity, _ in completed_units:
             logging.info(f"Production of {quantity} '{unit_type}' units completed on planet '{self.name}'.")
 

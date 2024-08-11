@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 class Building(ABC):
-    def __init__(self, name: str, level: int = 1):
+    def __init__(self, name: str, level: int = 0):
         self.name = name
         self.level = level
         self.building_type = self._generate_building_type()
