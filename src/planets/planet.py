@@ -1,9 +1,13 @@
-import time  # Ensure the time module is imported
+import time
+import logging
 from src.resources.resourcetype import ResourceType
-from src.buildings.mine import MetalMine,CrystalField,DeuteriumSynthesizer
+from src.buildings.mine import MetalMine, CrystalField, DeuteriumSynthesizer
 from src.resources.resource import Resource
 from src.buildings.building import Building
 from src.units.unit import Unit
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Planet:
     METAL_BASE_PRODUCTION_RATE = 10
@@ -27,17 +31,23 @@ class Planet:
         self.unit_prodlist = []
         self.building_prodlist = []
 
+        logging.debug(f'Planet {self.name} created for owner {self.owner} with initial resources {self.resources}')
+
     # Resources methods
 
     def calculate_base_production(self, tick: int) -> tuple:
+        logging.debug(f'Calculating base production for tick {tick}')
+        
         # Calculate base resource production without building time
         metal_base_rate = int(self.METAL_BASE_PRODUCTION_RATE * tick)
         crystal_base_rate = int(self.CRYSTAL_BASE_PRODUCTION_RATE * tick)
         deuterium_base_rate = int(self.DEUTERIUM_BASE_PRODUCTION_RATE * tick)
+        logging.debug(f'Base production rates - Metal: {metal_base_rate}, Crystal: {crystal_base_rate}, Deuterium: {deuterium_base_rate}')
 
         return metal_base_rate, crystal_base_rate, deuterium_base_rate
 
     def calculate_building_production(self, tick: int) -> tuple:
+        logging.debug(f'Calculating buildings production for tick {tick}')
         # Initialize variables with default values
         metal_building_rate = 0
         crystal_building_rate = 0
@@ -53,6 +63,7 @@ class Planet:
             elif building_type == DeuteriumSynthesizer.get_static_type():
                 deuterium_building_rate = int( self.buildings[building_type].get_production() * tick)
 
+        logging.debug(f'Building production rates - Metal: {metal_building_rate}, Crystal: {crystal_building_rate}, Deuterium: {deuterium_building_rate}')
         return (
             metal_building_rate,
             crystal_building_rate,
@@ -60,6 +71,7 @@ class Planet:
         )
     
     def produce_resources(self, tick: int = 1):
+        logging.info(f'Producing resources for tick {tick} on planet {self.name}')
         # Calculate base production rates
         base_metal, base_crystal, base_deuterium = self.calculate_base_production(tick)
 
@@ -70,31 +82,38 @@ class Planet:
         self.resources.metal = self.resources.metal + (base_metal + building_metal)
         self.resources.crystal = self.resources.crystal + (base_crystal + building_crystal)
         self.resources.deuterium = self.resources.deuterium + (base_deuterium + building_deuterium)
+        logging.debug(f'New resources - Metal: {self.resources.metal}, Crystal: {self.resources.crystal}, Deuterium: {self.resources.deuterium}')
 
     # Building methods
 
     def upgrade_building(self, building: Building) -> None:
         building_type = building.get_type()
+        logging.info(f'Trying to upgrade building {building_type} on planet {self.name}')
         # Check if the player has enough resources to upgrade the building
         upgrade_cost = building.calculate_upgrade_cost()
         if self.resources.metal < upgrade_cost[ResourceType.METAL] or \
             self.resources.crystal < upgrade_cost[ResourceType.CRYSTAL] or \
             self.resources.deuterium < upgrade_cost[ResourceType.DEUTERIUM]:
-            print("Insufficient resources to upgrade the building.")
+            logging.warning("Insufficient resources to upgrade the building.")
+            logging.debug(f"Upgrade cost - Metal: {upgrade_cost[ResourceType.METAL]}, Crystal: {upgrade_cost[ResourceType.CRYSTAL]}, Deuterium: {upgrade_cost[ResourceType.DEUTERIUM]}")
+            logging.debug(f"Current resources - Metal: {self.resources.metal}, Crystal: {self.resources.crystal}, Deuterium: {self.resources.deuterium}")
             return
         else:
             # Deduct the resources from the player
             self.resources.metal -= upgrade_cost[ResourceType.METAL]
             self.resources.crystal -= upgrade_cost[ResourceType.CRYSTAL]
             self.resources.deuterium -= upgrade_cost[ResourceType.DEUTERIUM]
+            logging.debug(f'Resources after upgrade - Metal: {self.resources.metal}, Crystal: {self.resources.crystal}, Deuterium: {self.resources.deuterium}')
+        
         if building_type not in self.buildings.keys():
             # First build the building
-            print(f"Start building {building_type.capitalize()} on this planet.")
+            logging.info(f"Start building {building_type.capitalize()} on this planet.")
             self.buildings[building_type] = building
         else:
             # Upgrade the building
-            print(f"Start Upgrading {building_type.capitalize()} from level {self.buildings[building_type].get_level()} to {self.buildings[building_type].get_level()+1} on this planet.")
+            logging.info(f"Start Upgrading {building_type.capitalize()} from level {self.buildings[building_type].get_level()} to {self.buildings[building_type].get_level()+1} on this planet.")
             self.buildings[building_type].upgrade()
+        
         self.add_building_to_prodlist(building, self.get_building_build_time(upgrade_cost))
 
     def add_building_to_prodlist(self, building: Building, duration) -> None:
@@ -109,6 +128,7 @@ class Planet:
         building_type = building.get_type()
 
         self.building_prodlist.append([building_type, end_time])
+        logging.debug(f'Building {building_type} added to production list, will be completed at {time.ctime(end_time)}')
 
     def get_building_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
@@ -124,21 +144,23 @@ class Planet:
         # Produce units based on the production list
         # Check if the player has enough resources to produce the units
         unit_type = unit.get_type()
+        logging.info(f'Starting production of {quantity} units of {unit_type} on planet {self.name}')
         production_cost = unit.calculate_total_production_cost(quantity)
         if self.resources.metal < production_cost[ResourceType.METAL] or \
             self.resources.crystal < production_cost[ResourceType.CRYSTAL] or \
             self.resources.deuterium < production_cost[ResourceType.DEUTERIUM]:
-            print("Insufficient resources to produce the units.")
+            logging.warning("Insufficient resources to produce the units.")
             return
         else:
             # Deduct the resources from the player
             self.resources.metal -= production_cost[ResourceType.METAL]
             self.resources.crystal -= production_cost[ResourceType.CRYSTAL]
             self.resources.deuterium -= production_cost[ResourceType.DEUTERIUM]
+            logging.debug(f'Resources after unit production - Metal: {self.resources.metal}, Crystal: {self.resources.crystal}, Deuterium: {self.resources.deuterium}')
 
-        print(f"Start producing {quantity} of {unit_type.capitalize()} on this planet.")
+        logging.info(f"Start producing {quantity} of {unit_type.capitalize()} on this planet.")
         self.ships[unit_type] = quantity
-        self.add_unit_to_prodlist(unit, self.get_units_build_time(production_cost))
+        self.add_unit_to_prodlist(unit, quantity, self.get_units_build_time(production_cost))
 
     def add_unit_to_prodlist(self, unit: Unit, quantity: int, duration) -> None:
         """
@@ -157,6 +179,7 @@ class Planet:
         unit_type = unit.get_type()
 
         self.unit_prodlist.append([unit_type, quantity, end_time])
+        logging.debug(f'Unit {unit_type} production started, {quantity} units will be completed at {time.ctime(end_time)}')
 
     def get_units_build_time(self, upgrade_cost) -> int:
         # Calculate the build time for the building (in hours)
@@ -188,8 +211,7 @@ class Planet:
         completed_buildings = [prod for prod in self.building_prodlist if prod[1] <= now]
         for building_type, _ in completed_buildings:
             building = self.buildings[building_type]
-            print(f"Building production of '{building_type}' level {building.get_level()} completed on planet '{self.name}'.")
-
+            logging.info(f"Building production of '{building_type}' level {building.get_level()} completed on planet '{self.name}'.")
 
         # Update building production list to remove completed items
         self.building_prodlist = [prod for prod in self.building_prodlist if prod[1] > now]
@@ -197,7 +219,7 @@ class Planet:
         # Check which unit productions are completed
         completed_units = [prod for prod in self.unit_prodlist if prod[2] <= now]
         for unit_type, quantity, _ in completed_units:
-            print(f"Production of {quantity} '{unit_type}' units completed on planet '{self.name}'.")
+            logging.info(f"Production of {quantity} '{unit_type}' units completed on planet '{self.name}'.")
 
         # Update unit production list to remove completed items
         self.unit_prodlist = [prod for prod in self.unit_prodlist if prod[2] > now]
