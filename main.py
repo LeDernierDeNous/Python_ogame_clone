@@ -7,16 +7,9 @@ from src.buildings.mine import MetalMine, CrystalField, DeuteriumSynthesizer
 
 def display_menu():
     print("\n--- Main Menu ---")
-    print("1. Add Planet")
-    print("2. Add Building")
-    print("3. View Planets")
-    print("4. Exit")
-
-def add_planet(player):
-    name = input("Enter the name of the planet: ")
-    planet = Planet(owner=player.name, name=name)
-    player.add_planet(planet)
-    print(f"Planet '{name}' added to player '{player.name}'.")
+    print("1. Add Building")
+    print("2. View Planets")
+    print("3. Exit")
 
 def add_building(player):
     if not player.planets:
@@ -131,12 +124,10 @@ def main():
             try:
                 choice = int(input("Enter your choice: "))
                 if choice == 1:
-                    add_planet(player)
-                elif choice == 2:
                     add_building(player)
-                elif choice == 3:
+                elif choice == 2:
                     view_planets(player)
-                elif choice == 4:
+                elif choice == 3:
                     print("Exiting the game.")
                     break
                 else:
