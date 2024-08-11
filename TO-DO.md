@@ -1,87 +1,66 @@
 # Game Development To-Do List
 
-## 1. Design Player and NPC Classes
+## Things to add in the future
 
-### Player Class
+### 1. Research system
 
-- [ ] **Attributes**
-  - [✓] `name`: The player's name or identifier.
-  - [✓] `planets`: A list of planets owned by the player.
-  - [ ] `research`: Technologies or upgrades the player has researched.
-  - [ ] `fleet`: Ships or units owned by the player.
+### 2. Combat system
 
-- [ ] **Methods**
-  - [✓] `add_planet(planet)`: Add a planet to the player’s list.
-  - [ ] `research_technology(tech)`: Start or complete research on a technology.
-  - [ ] `build_fleet(ship_type, quantity)`: Construct ships and add them to the fleet.
-  - [ ] `attack(target)`: Engage in combat with another player or NPC.
-  - [ ] `defend()`: Organize defenses against attacks.
+### 3. Universe / Stellar System
 
-### NPC Class
+### 4. Fleet system
 
-- [ ] **Attributes**
-  - [ ] `difficulty_level`: Determines the NPC’s strategy and aggressiveness.
+### 5. NPC(s) ?
 
-- [ ] **Methods**
-  - [ ] `make_decision()`: AI logic for deciding actions (e.g., attack, defend, expand).
-  - [ ] `negotiate(player)`: Interaction with players for alliances or treaties.
+### 6. Add all buildings, defenses and ships
 
-## 2. Implement Fleet System
+### 7. Deep space exploration
 
-### Fleet Class
+### 8. Energy system
 
-- [ ] **Attributes**
-  - [ ] `ships`: A dictionary of ship types and their quantities.
-  - [ ] `commander`: The player or NPC commanding the fleet.
+### 9. GUI
 
-- [ ] **Methods**
-  - [ ] `add_ship(ship_type, quantity)`: Add ships to the fleet.
-  - [ ] `remove_ship(ship_type, quantity)`: Remove ships from the fleet.
-  - [ ] `engage(target)`: Initiate combat with another fleet or planet.
-  - [ ] `calculate_power()`: Assess the fleet’s combat strength.
+## 10. Quest system
 
-### Ship Class
+Implement a quest system that allows players to engage in various missions and tasks within the game. This can include both main storyline quests and side quests, offering players a sense of progression and purpose in the game world.
 
-- [ ] **Attributes**
-  - [ ] `name`: Name or type of the ship.
-  - [ ] `attack_power`: Offensive capability.
-  - [ ] `defense_power`: Defensive capability.
-  - [ ] `speed`: Travel speed.
-  - [ ] `cost`: Resource cost to build.
+## 11. Trading system
 
-## 3. Develop Defense Structures
+Introduce a trading system that allows players to buy and sell resources, goods, and items with NPCs or other players. This can include establishing trade routes, negotiating prices, and managing inventory.
 
-### Defense Building Class
+## 12. Crafting system
 
-- [ ] **Attributes**
-  - [ ] `defense_power`: Overall defense capability.
-  - [ ] `shield_strength`: Additional protective measure.
+Create a crafting system that enables players to gather resources and create new items, weapons, and equipment. This can involve gathering materials, learning recipes, and upgrading existing items.
 
-- [ ] **Methods**
-  - [ ] `upgrade()`: Enhance the building’s defensive capabilities.
-  - [ ] `calculate_defense()`: Compute total defense based on level and enhancements.
+## 13. Skill tree
 
-## 4. Interaction and Combat Mechanics
+Implement a skill tree system that allows players to customize and specialize their characters or ships. This can include unlocking new abilities, improving existing skills, and choosing different paths of progression.
 
-### Combat System
+## 14. Multiplayer functionality
 
-- [ ] **Initiating Combat**: Define how and when combat occurs (e.g., player commands, NPC decisions).
-- [ ] **Combat Resolution**: Develop logic for resolving battles based on fleet strengths, defensive capabilities, and random factors.
-- [ ] **Rewards and Penalties**: Implement consequences for winning or losing battles, such as resource gain/loss or planet capture.
+Add multiplayer functionality to the game, allowing players to interact and play together in the same game world. This can include cooperative gameplay, player-versus-player battles, or trading and socializing with other players.
 
-## 5. User Interface Considerations
+## 15. Modding support
 
-### UI Elements
+Provide modding support for the game, allowing players to create and share their own custom content, such as new quests, items, or even entire game modifications. This can enhance the longevity and replayability of the game.
 
-- [ ] **Entity Management**: Interfaces for managing players, fleets, and defense buildings.
-- [ ] **Combat Display**: Visuals for ongoing battles and their outcomes.
-- [ ] **Notifications**: Alerts for attacks, research completion, and other events.
+## 16. Achievements and leaderboards
 
-## 6. Testing and Iteration
+Include achievements and leaderboards to track and showcase player progress and accomplishments. This can add a competitive element to the game and encourage players to strive for specific goals.
 
-### Testing Strategies
+## 17. Dynamic events
 
-- [ ] **Unit Testing**: Write tests for player actions, fleet management, and combat mechanics.
-- [ ] **Simulation Testing**: Simulate AI behaviors and interactions to ensure NPCs act logically.
-- [ ] **Balance Testing**: Playtest to find and adjust balance issues with resources, combat, and AI strategies.
+Introduce dynamic events that occur randomly or based on certain conditions in the game world. These events can include invasions, natural disasters, or special opportunities for players to earn rewards or face challenges.
+
+## 18. Player housing
+
+Allow players to own and customize their own personal spaces within the game world. This can include building and decorating houses, managing resources, and inviting other players to visit.
+
+## 19. New playable races or factions
+
+Introduce new playable races or factions that offer unique abilities, storylines, and gameplay mechanics. This can provide players with additional options and diversity in their gameplay experience.
+
+## 20. Voice acting and sound design
+
+Enhance the immersion of the game by adding voice acting and high-quality sound design. This can bring characters and the game world to life, creating a more engaging and immersive experience for players.
 
