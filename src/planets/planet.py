@@ -219,20 +219,27 @@ class Planet:
 
     def update_prodlists(self):
         """
-        Updates the production lists for buildings and units, and provides feedback when production finishes.
+        Update the production lists for buildings and units on the planet.
+        This method checks which building and unit productions are completed based on the current time.
+        Parameters:
+        - None
+        Returns:
+        - None
         """
+
         now = time.time()
 
         # Check which building productions are completed
         completed_buildings = [prod for prod in self.building_prodlist if prod[1] <= now]
         # Log the current state of buildings on the planet
-        logging.debug(f"Current buildings on planet '{self.name}': {self.buildings}")
+        logging.debug(f"Current buildings on planet '{self.name}': {self.buildings.keys()}")
         # Log the current building production list
         logging.debug(f"Current building production list on planet '{self.name}': {self.building_prodlist}")
         # Log the current completed buildings production list
         logging.debug(f"Current completed building production list on planet '{self.name}': {completed_buildings}")
 
         for building_type, _ in completed_buildings:
+            self.finish_building_upgrade(building_type)
             building = self.buildings[building_type]
             logging.info(f"Building production of '{building_type}' level {building.get_level()} completed on planet '{self.name}'.")
 

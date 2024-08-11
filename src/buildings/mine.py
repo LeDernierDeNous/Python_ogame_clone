@@ -10,7 +10,10 @@ class MetalMine(Building, ABC):
         self.resource_type = ResourceType.METAL
 
     def get_production(self) -> int:
-        return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
+        if self.level == 0:
+            return 0
+        else:
+            return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
     
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost based on the formula
@@ -34,7 +37,10 @@ class CrystalField(Building, ABC):
         self.resource_type = ResourceType.CRYSTAL
 
     def get_production(self) -> int:
-        return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
+        if self.level == 0:
+            return 0
+        else:
+            return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
     
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost based on the formula
@@ -58,7 +64,10 @@ class DeuteriumSynthesizer(Building, ABC):
         self.resource_type = ResourceType.DEUTERIUM
 
     def get_production(self) -> int:
-        return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
+        if self.level == 0:
+            return 0
+        else:
+            return int(self.PRODUCTION_FACTOR * self.level * (1.1 ** self.level))
 
     def calculate_upgrade_cost(self) -> dict:
         # Calculate upgrade cost based on the formula
