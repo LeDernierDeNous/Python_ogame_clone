@@ -1,4 +1,5 @@
 import time
+import copy
 import logging
 from src.resources.resourcetype import ResourceType
 from src.buildings.mine import MetalMine, CrystalField, DeuteriumSynthesizer
@@ -21,7 +22,8 @@ class Planet:
     def __init__(self, owner, name: str):
         self.owner = owner
         self.name = name
-        self.resources = self.starting_amount_resources
+        # Assuming self.starting_amount_resources is a dictionary or a similar mutable object
+        self.resources = copy.deepcopy(self.starting_amount_resources)
 
         self.buildings = {}
         self.defenses = {}
