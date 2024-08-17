@@ -26,19 +26,18 @@ To get started with this project, you'll need to clone the repository and instal
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/LeDernierDeNous/game-project-commandline.git```
+   git clone https://github.com/LeDernierDeNous/game-project-commandline.git
 
 2. **Navigate to the project directory:**
 
     ```sh 
-    cd game-project-commandline```
+    cd game-project-commandline
 
 3. **Install dependencies.**
 
 This project uses Python. You may want to create a virtual environment and install dependencies listed in requirements.txt.
 
     ```sh
-
     python -m venv env
     source env/bin/activate  # On Windows use `env\Scripts\activate`
     pip install -r requirements.txt
