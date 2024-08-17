@@ -49,9 +49,8 @@ To start the game, run the `main.py` script. This will start the command-line in
 
 ### Commands
 
-    ```sh
-    python main.py 
-    ```
+    ```sh 
+    python main.py
 
 ### Commands
 
