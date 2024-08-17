@@ -37,19 +37,14 @@ To get started with this project, you'll need to clone the repository and instal
 
 This project uses Python. You may want to create a virtual environment and install dependencies listed in requirements.txt.
 
-    ```sh
     python -m venv env
     source env/bin/activate  # On Windows use `env\Scripts\activate`
     pip install -r requirements.txt
-    ```
 
 ## Usage
 
 To start the game, run the `main.py` script. This will start the command-line interface where you can interact with the game.
 
-### Commands
-
-    ```sh 
     python main.py
 
 ### Commands
